@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres
+    container_name: aetherskyDB
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: randompassword1!
+      POSTGRES_DB: aethersky

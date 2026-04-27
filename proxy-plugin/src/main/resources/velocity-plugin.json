@@ -1,0 +1,6 @@
+{
+  "id": "proxy-plugin",
+  "name": "proxy-plugin",
+  "version": "${version}",
+  "main": "org.czellmer1324.proxyPlugin.ProxyPlugin"
+}
