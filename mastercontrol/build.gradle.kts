@@ -32,6 +32,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.projectlombok:lombok")
     implementation(kotlin("stdlib-jdk8"))
+    implementation(project(":common"))
 }
 
 tasks.withType<Test> {

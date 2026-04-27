@@ -9,8 +9,8 @@ plugins {
 rootProject.name = "aethersky-network"
 
 include(
-    "aethersky-plugin",
-    "mastercontrol",
-    "proxy-plugin",
-    "common"
+    ":aethersky-plugin",
+    ":mastercontrol",
+    ":proxy-plugin",
+    ":common"
 )
