@@ -19,7 +19,6 @@ dependencies {
     compileOnly("com.infernalsuite.asp:api:4.0.0-SNAPSHOT")
     implementation("io.ktor:ktor-client-core:${ktorVersion}")
     implementation("io.ktor:ktor-client-okhttp:${ktorVersion}")
-    implementation(project(":common"))
 }
 
 kotlin {
@@ -45,4 +44,16 @@ tasks {
             expand(props)
         }
     }
+}
+
+tasks.register<Copy>("copyToServer") {
+    description = "Moves jar to plugin folder"
+    from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
+    into(file("/Users/cody/AetherSkyServer/plugins")) // Change this to your server's path
+
+    // Optional: Rename the file during the move
+    rename { "aethersky.jar" }
+
+    // Ensure the build runs before copying
+    dependsOn("shadowJar") // Use "jar" if not using the Shadow plugin
 }
