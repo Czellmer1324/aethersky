@@ -7,12 +7,19 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven ("https://repo.infernalsuite.com/repository/maven-snapshots/")
 }
+
+val ktorVersion = "3.4.3"
 
 dependencies {
     implementation(project(":common"))
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compileOnly("com.infernalsuite.asp:api:4.0.0-SNAPSHOT")
+    implementation("io.ktor:ktor-client-core:${ktorVersion}")
+    implementation("io.ktor:ktor-client-okhttp:${ktorVersion}")
+    implementation(project(":common"))
 }
 
 kotlin {
