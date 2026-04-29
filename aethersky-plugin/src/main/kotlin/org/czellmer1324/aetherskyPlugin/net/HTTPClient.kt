@@ -23,12 +23,8 @@ object HTTPClient {
         client.close()
     }
 
-    suspend fun retrievePlayerInfo(uuid: UUID) {
+    suspend fun retrievePlayerInfo(uuid: UUID) : String {
         val response = client.get(URL + "player/" + uuid)
-        val status = response.status
-        val data: String = response.body()
-        plugin!!.logger.info(status.value.toString())
-        plugin!!.logger.info(data)
-
+        return response.body()
     }
 }

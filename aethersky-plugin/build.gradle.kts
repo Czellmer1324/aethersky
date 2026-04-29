@@ -19,6 +19,8 @@ dependencies {
     compileOnly("com.infernalsuite.asp:api:4.0.0-SNAPSHOT")
     implementation("io.ktor:ktor-client-core:${ktorVersion}")
     implementation("io.ktor:ktor-client-okhttp:${ktorVersion}")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.22.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.22.0")
 }
 
 kotlin {
