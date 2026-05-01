@@ -7,7 +7,7 @@ import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import java.util.UUID
 
 object HTTPClient {
-    private const val URL = "http://localhost:8080/"
+    private const val URL = "http://mastercontrol:8081/"
     private var plugin: AetherskyPlugin ? = null
     private val client = HttpClient {
         expectSuccess = true

@@ -30,6 +30,7 @@ kotlin {
 tasks {
     build {
         dependsOn(shadowJar)
+        finalizedBy("copyTask")
     }
 
     runServer {
@@ -48,14 +49,19 @@ tasks {
     }
 }
 
-tasks.register<Copy>("copyToServer") {
+tasks.register<Copy>("copyTask") {
     description = "Moves jar to plugin folder"
-    from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
-    into(file("/Users/cody/AetherSkyServer/plugins")) // Change this to your server's path
 
-    // Optional: Rename the file during the move
-    rename { "aethersky.jar" }
+    val destinations = listOf (
+        "/Users/cody/Documents/mc-network/hub/plugins",
+        "/Users/cody/Documents/mc-network/island/plugins"
+    )
 
-    // Ensure the build runs before copying
-    dependsOn("shadowJar") // Use "jar" if not using the Shadow plugin
+    destinations.forEach { path ->
+        copy {
+            from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
+            rename { "aethersky.jar" }
+            into(file(path))
+        }
+    }
 }
