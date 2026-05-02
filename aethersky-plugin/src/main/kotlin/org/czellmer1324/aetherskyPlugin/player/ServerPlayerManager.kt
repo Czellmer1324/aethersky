@@ -13,8 +13,8 @@ object ServerPlayerManager {
         return cache[uuid]
     }
 
-    fun removePlayer(uuid: UUID) {
-        cache.remove(uuid)
+    fun removePlayer(uuid: UUID): ServerPlayer {
+        return cache.remove(uuid)!!
     }
 
     fun printPlayers() {

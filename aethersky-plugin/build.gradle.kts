@@ -30,7 +30,6 @@ kotlin {
 tasks {
     build {
         dependsOn(shadowJar)
-        finalizedBy("copyTask")
     }
 
     runServer {
@@ -49,19 +48,22 @@ tasks {
     }
 }
 
-tasks.register<Copy>("copyTask") {
-    description = "Moves jar to plugin folder"
+val destinations = listOf(
+    "/Users/cody/Documents/mc-network/hub/plugins",
+    "/Users/cody/Documents/mc-network/island/plugins"
+)
 
-    val destinations = listOf (
-        "/Users/cody/Documents/mc-network/hub/plugins",
-        "/Users/cody/Documents/mc-network/island/plugins"
-    )
+val copyTasks = destinations.mapIndexed { i, path ->
+    tasks.register<Copy>("copyTask$i") {
+        description = "moves jar to folder"
+        dependsOn(tasks.shadowJar)
 
-    destinations.forEach { path ->
-        copy {
-            from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
-            rename { "aethersky.jar" }
-            into(file(path))
-        }
+        from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
+        into(path)
+        rename { "aethersky.jar" }
     }
+}
+
+tasks.named("build") {
+    finalizedBy(copyTasks)
 }

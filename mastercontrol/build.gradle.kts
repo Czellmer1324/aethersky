@@ -38,3 +38,22 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+val skipTests = providers.gradleProperty("skipTests").isPresent
+
+tasks.withType<Test>().configureEach {
+    enabled = !skipTests
+}
+
+tasks.register<Copy>("copy") {
+    description = "moves jar to folder"
+    dependsOn("build")
+
+    from(layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
+    into("/Users/cody/Documents/mc-network/mastercontrol")
+    rename { "app.jar" }
+}
+
+tasks.named("build") {
+    finalizedBy("copy")
+}

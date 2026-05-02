@@ -30,4 +30,18 @@ public class MasterPlayerController {
 
         return ResponseEntity.status(code).body(responseInfo.response());
     }
+
+    @PutMapping("/store")
+    public ResponseEntity<?> storePlayer(@RequestBody PlayerData data) {
+        ServiceResponse responseInfo = service.storePlayer(data);
+        HttpStatus code;
+
+        if (responseInfo.successful()) {
+            code = HttpStatus.OK;
+        } else {
+            code = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(code).body(responseInfo.response());
+    }
 }

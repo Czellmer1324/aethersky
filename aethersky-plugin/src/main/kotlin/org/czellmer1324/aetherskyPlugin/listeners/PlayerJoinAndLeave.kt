@@ -1,9 +1,8 @@
 package org.czellmer1324.aetherskyPlugin.listeners
 
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
@@ -14,20 +13,21 @@ import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
-import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinPlayerInfo
 
 class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
 
     @EventHandler
     fun preLoginEvent(event: AsyncPlayerPreLoginEvent) {
-        plugin.launch(Dispatchers.IO) {
+        val job = plugin.launch(Dispatchers.IO) {
+            plugin.logger.info("Pre join player event fir ")
+            // Get the player info from master control
             val response = HTTPClient.retrievePlayerInfo(event.uniqueId)
-            withContext(Dispatchers.Default) {
-                val gson = Gson()
-                val playerInfo = gson.fromJson(response, PreJoinPlayerInfo::class.java)
-                PreJoinCache.cachePreInfo(playerInfo)
-            }
+            plugin.logger.info(response.toString())
+            PreJoinCache.cachePreInfo(response)
         }
+
+        // Wait for the player info to be retrieved and cached in preJoin cache
+        runBlocking { job.join() }
     }
 
     @EventHandler
@@ -40,8 +40,9 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
 
     @EventHandler
     fun playerLeaveEvent(ev: PlayerQuitEvent) {
-        plugin.launch(Dispatchers.Default) {
-            ServerPlayerManager.removePlayer(ev.player.uniqueId)
+        plugin.launch(Dispatchers.IO) {
+            val player = ServerPlayerManager.removePlayer(ev.player.uniqueId)
+            HTTPClient.storePlayer(player)
             //TODO: NEED TO PUSH UPDATED PLAYER INFO TO MASTERCONTROL
         }
     }

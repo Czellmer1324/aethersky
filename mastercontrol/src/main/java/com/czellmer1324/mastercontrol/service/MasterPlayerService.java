@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class MasterPlayerService {
     private final MasterPlayerRepository playerRepository;
 
+    //TODO: Implement redis cache for player info
     public ServiceResponse getPlayer(UUID uuid) {
         Optional<MasterPlayer> opPlayer = playerRepository.findById(uuid);
         MasterPlayer player;
@@ -28,4 +31,23 @@ public class MasterPlayerService {
         return new ServiceResponse(data, true, "no fail");
     }
 
+    public ServiceResponse storePlayer(PlayerData data) {
+        // Will save the info to cache here rather than update the database, for now update the database
+        Optional<MasterPlayer> opPlayer = playerRepository.findById(data.uuid());
+        try {
+            if (opPlayer.isEmpty()) {
+                playerRepository.save(new MasterPlayer(data.uuid()));
+            } else {
+                MasterPlayer player = opPlayer.get();
+                player.updateInfo(data);
+                playerRepository.save(player);
+            }
+
+            log.info("Saved player with uuid: {}", data.uuid());
+
+            return new ServiceResponse(Map.of("Message", "Player stored"), true, "No fail");
+        } catch (Exception e) {
+            return new ServiceResponse(Map.of("Message", "Something went wrong"), false, "Failure saving to database");
+        }
+    }
 }
