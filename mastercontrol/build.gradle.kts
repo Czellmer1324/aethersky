@@ -22,10 +22,16 @@ dependencies {
     implementation(project(":common"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+
     compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
-    annotationProcessor("org.projectlombok:lombok")
+
+    compileOnly("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    annotationProcessor ("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testCompileOnly("org.projectlombok:lombok")
@@ -33,6 +39,8 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":common"))
+    implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation ("org.apache.commons:commons-pool2")
 }
 
 tasks.withType<Test> {
