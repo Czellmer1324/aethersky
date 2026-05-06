@@ -2,7 +2,6 @@ package com.czellmer1324.mastercontrol.write.behind.workers;
 
 import com.czellmer1324.mastercontrol.entity.MasterPlayer;
 import com.czellmer1324.mastercontrol.entity.MasterPlayerCache;
-import com.czellmer1324.mastercontrol.repository.MasterPlayerRedis;
 import com.czellmer1324.mastercontrol.repository.MasterPlayerRepository;
 import com.czellmer1324.mastercontrol.util.MasterPlayerMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,10 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -25,7 +21,6 @@ public class PlayerWriteTask {
     private final RedisTemplate<String, Object> redisTemplate;
     private final MasterPlayerRepository playerRepository;
     private final MasterPlayerMapper mapper;
-    private final MasterPlayerRedis playerCache;
 
     @Scheduled(initialDelay = 1, fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void batchSavePlayers() {
@@ -39,7 +34,12 @@ public class PlayerWriteTask {
                 .map(id -> {
                     try {
                         UUID uuid = UUID.fromString(id.toString());
-                        MasterPlayerCache cachePlayer = playerCache.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Player not in cache"));
+                        MasterPlayerCache cachePlayer = (MasterPlayerCache) redisTemplate.opsForHash().get("PLAYERS", Collections.singleton("player:" + uuid));
+
+                        if (cachePlayer == null) {
+                            throw new EntityNotFoundException("Player not found in cache");
+                        }
+
                         return mapper.toMasterPlayer(cachePlayer);
                     } catch (Exception e) {
                         log.warn("Failed to process player {}:{}", id, e.getMessage());

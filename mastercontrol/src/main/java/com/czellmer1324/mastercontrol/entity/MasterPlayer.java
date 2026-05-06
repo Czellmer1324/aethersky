@@ -22,6 +22,10 @@ public class MasterPlayer implements Persistable<UUID> {
         this.uuid = uuid;
     }
 
+    public MasterPlayer(PlayerData data) {
+        this.uuid = data.uuid();
+    }
+
     public void updateInfo(PlayerData data) {
         this.uuid = data.uuid();
     }

@@ -17,6 +17,8 @@ public class MasterPlayerCache {
     @Id
     private UUID uuid;
 
+    private boolean isNew;
+
     public void updateInfo(PlayerData data) {
         this.uuid = data.uuid();
     }
