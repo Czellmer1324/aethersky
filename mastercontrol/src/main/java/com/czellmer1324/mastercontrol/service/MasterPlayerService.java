@@ -26,6 +26,7 @@ public class MasterPlayerService {
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String WRITE_BUFFER_KEY = "players:pending_sync";
     private static final String PLAYER_HASH_KEY = "PLAYERS";
+    private static final int TTL_MINUTES = 5;
 
     public ServiceResponse getPlayer(UUID uuid) {
         // check cache first
@@ -115,6 +116,6 @@ public class MasterPlayerService {
     }
 
     private void setNewTTL(UUID uuid) {
-        redisTemplate.opsForHash().expire(PLAYER_HASH_KEY, Duration.ofMinutes(5), Collections.singleton("player:" + uuid));
+        redisTemplate.opsForHash().expire(PLAYER_HASH_KEY, Duration.ofMinutes(TTL_MINUTES), Collections.singleton("player:" + uuid));
     }
 }
