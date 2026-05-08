@@ -21,6 +21,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:${ktorVersion}")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.22.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.22.0")
+    implementation("io.lettuce:lettuce-core:7.5.1.RELEASE")
 }
 
 kotlin {

@@ -13,6 +13,11 @@ repositories {
 dependencies {
     implementation(project(":common"))
     compileOnly("com.velocitypowered:velocity-api:3.1.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("io.lettuce:lettuce-core:7.5.1.RELEASE")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-velocity-api:2.22.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-velocity-core:2.22.0")
 }
 
 kotlin {

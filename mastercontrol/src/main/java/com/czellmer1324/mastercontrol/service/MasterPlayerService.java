@@ -29,36 +29,41 @@ public class MasterPlayerService {
     private static final int TTL_MINUTES = 5;
 
     public ServiceResponse getPlayer(UUID uuid) {
-        // check cache first
-        Optional<MasterPlayerCache> cachedInfo = getFromCache(uuid);
-        MasterPlayer player;
+        try {
+            // check cache first
+            Optional<MasterPlayerCache> cachedInfo = getFromCache(uuid);
+            MasterPlayer player;
 
-        // Cache miss they are not cached
-        if (cachedInfo.isEmpty()) {
-            Optional<MasterPlayer> opPlayer = playerRepository.findById(uuid);
+            // Cache miss they are not cached
+            if (cachedInfo.isEmpty()) {
+                Optional<MasterPlayer> opPlayer = playerRepository.findById(uuid);
 
-            // Create a new player object if they have never been on the server
-            player = opPlayer.orElseGet(() -> new MasterPlayer(uuid));
+                // Create a new player object if they have never been on the server
+                player = opPlayer.orElseGet(() -> new MasterPlayer(uuid));
 
-            if (player.isNew()) {
-                // Save the player if a new one is created into the database
-                player = playerRepository.save(player);
+                if (player.isNew()) {
+                    // Save the player if a new one is created into the database
+                    player = playerRepository.save(player);
+                }
+
+                // cache them
+                cachePlayer(mapper.toMasterPlayerCache(player));
+                // Set expiration
+                setNewTTL(uuid);
+            } else {
+                player = mapper.toMasterPlayer(cachedInfo.get());
+                //update the TTL of the cached player
+                setNewTTL(uuid);
+                log.info("Retrieved player from cache. New expiration : {}", redisTemplate.opsForHash().getTimeToLive(PLAYER_HASH_KEY, Collections.singleton("player:" + uuid)));
             }
 
-            // cache them
-            cachePlayer(mapper.toMasterPlayerCache(player));
-            // Set expiration
-            setNewTTL(uuid);
-        } else {
-            player = mapper.toMasterPlayer(cachedInfo.get());
-            //update the TTL of the cached player
-            setNewTTL(uuid);
-            log.info("Retrieved player from cache. New expiration : {}", redisTemplate.opsForHash().getTimeToLive(PLAYER_HASH_KEY, Collections.singleton("player:" + uuid)));
+            PlayerData data = new PlayerData(player.getUuid());
+            log.info(data.uuid().toString());
+            return new ServiceResponse(data, true, "no fail");
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return new ServiceResponse(Map.of("Message", "Failure retrieving player"), false, "Failure retrieving player info");
         }
-
-        PlayerData data = new PlayerData(player.getUuid());
-        log.info(data.uuid().toString());
-        return new ServiceResponse(data, true, "no fail");
     }
 
     public ServiceResponse storePlayer(PlayerData data) {
