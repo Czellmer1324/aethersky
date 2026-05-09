@@ -12,10 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +59,7 @@ public class MasterPlayerService {
             return new ServiceResponse(data, true, "no fail");
         } catch (Exception e) {
             log.warn(e.getMessage());
+            log.warn(Arrays.toString(e.getStackTrace()));
             return new ServiceResponse(Map.of("Message", "Failure retrieving player"), false, "Failure retrieving player info");
         }
     }
@@ -107,7 +105,7 @@ public class MasterPlayerService {
     }
 
     private Optional<MasterPlayerCache> getFromCache(UUID uuid) {
-        MasterPlayerCache cachedPlayer = (MasterPlayerCache) redisTemplate.opsForHash().get(PLAYER_HASH_KEY, "player:" + uuid);
+        MasterPlayerCache cachedPlayer = (MasterPlayerCache) redisTemplate.opsForHash().get(PLAYER_HASH_KEY, "player:" + uuid.toString());
 
         if (cachedPlayer == null) {
             return Optional.empty();
@@ -117,7 +115,7 @@ public class MasterPlayerService {
     }
 
     private void cachePlayer(MasterPlayerCache player) {
-        redisTemplate.opsForHash().put(PLAYER_HASH_KEY, "player:" + player.getUuid(), player);
+        redisTemplate.opsForHash().put(PLAYER_HASH_KEY, "player:" + player.getUuid().toString(), player);
     }
 
     private void setNewTTL(UUID uuid) {

@@ -34,7 +34,7 @@ public class PlayerWriteTask {
                 .map(id -> {
                     try {
                         UUID uuid = UUID.fromString(id.toString());
-                        MasterPlayerCache cachePlayer = (MasterPlayerCache) redisTemplate.opsForHash().get("PLAYERS", Collections.singleton("player:" + uuid));
+                        MasterPlayerCache cachePlayer = (MasterPlayerCache) redisTemplate.opsForHash().get("PLAYERS", "player:" + uuid);
 
                         if (cachePlayer == null) {
                             throw new EntityNotFoundException("Player not found in cache");
@@ -52,6 +52,7 @@ public class PlayerWriteTask {
         try {
             //save the players
             playerRepository.saveAll(playersToSync);
+            playersToSync.forEach(player -> log.info("saved player: {}", player.getId()));
             redisTemplate.delete("players:pending_sync");
         } catch (Exception e) {
             log.warn("Failed to batch update players : {}", e.getMessage());

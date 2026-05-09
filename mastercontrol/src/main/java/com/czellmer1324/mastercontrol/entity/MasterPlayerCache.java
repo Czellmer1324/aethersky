@@ -12,9 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "player")
 public class MasterPlayerCache {
-    @Id
     private UUID uuid;
 
     private boolean isNew;
