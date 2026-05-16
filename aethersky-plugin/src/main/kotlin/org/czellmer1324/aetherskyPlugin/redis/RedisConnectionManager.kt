@@ -1,4 +1,4 @@
-package org.czellmer1324.proxyPlugin.redis
+package org.czellmer1324.aetherskyPlugin.redis
 
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.StatefulRedisConnection

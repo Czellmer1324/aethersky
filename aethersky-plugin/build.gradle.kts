@@ -8,6 +8,7 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven ("https://repo.infernalsuite.com/repository/maven-snapshots/")
+    maven { url = uri("https://repo.panda-lang.org/releases") }
 }
 
 val ktorVersion = "3.4.3"
@@ -22,6 +23,7 @@ dependencies {
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.22.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.22.0")
     implementation("io.lettuce:lettuce-core:7.5.1.RELEASE")
+    implementation("dev.rollczi:litecommands-bukkit:3.10.2")
 }
 
 kotlin {

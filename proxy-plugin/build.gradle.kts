@@ -18,6 +18,7 @@ dependencies {
     implementation("io.lettuce:lettuce-core:7.5.1.RELEASE")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-velocity-api:2.22.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-velocity-core:2.22.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
 tasks {
     build {
         dependsOn(shadowJar)
+        finalizedBy("copy")
     }
 
   runVelocity {
@@ -42,4 +44,13 @@ tasks {
             expand(props)
         }
     }
+}
+
+tasks.register<Copy>("copy") {
+    description = "moves jar to folder"
+    dependsOn(tasks.shadowJar)
+
+    from(layout.buildDirectory.file("libs/${project.name}-${project.version}-all.jar"))
+    into("/Users/cody/Documents/mc-network/velocity/plugins")
+    rename { "proxy-plugin.jar" }
 }
