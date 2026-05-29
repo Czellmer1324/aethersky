@@ -1,11 +1,14 @@
 package org.czellmer1324.proxyPlugin.redis
 
-import com.google.common.base.Predicate
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.api.sync.RedisCommands
+import io.lettuce.core.pubsub.RedisPubSubAdapter
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 
 object RedisConnectionManager : AutoCloseable {
@@ -14,7 +17,7 @@ object RedisConnectionManager : AutoCloseable {
     private val pubSubConnection: StatefulRedisPubSubConnection<String, String> = redisClient.connectPubSub()
     private val commands: RedisCommands<String?, String?>? = connection.sync()
 
-    private val messageFlow = RedisConnectionManager.pubSubConnection.reactive()
+    private val messageFlow = pubSubConnection.reactive()
         .observeChannels()
         .asFlow()
 
@@ -28,6 +31,12 @@ object RedisConnectionManager : AutoCloseable {
             .message
     }
 
+    fun listenToChannel(channel: String) : Flow<String> {
+        pubSubConnection.reactive().subscribe(channel).subscribe()
+
+        return messageFlow.filter { it.channel == channel }
+            .map { it.message }
+    }
 
     override fun close() {
         connection.close()

@@ -18,6 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class MasterPlayerService {
+    //TODO: NEED TO FIGURE OUT IF CACHE EXPIRATION IS ACTUALLY WORKING
     private final MasterPlayerRepository playerRepository;
     private final MasterPlayerMapper mapper;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -55,7 +56,6 @@ public class MasterPlayerService {
             }
 
             PlayerData data = new PlayerData(player.getUuid());
-            log.info(data.uuid().toString());
             return new ServiceResponse(data, true, "no fail");
         } catch (Exception e) {
             log.warn(e.getMessage());

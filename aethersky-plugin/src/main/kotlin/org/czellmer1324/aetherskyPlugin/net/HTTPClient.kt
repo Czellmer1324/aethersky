@@ -6,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -48,11 +49,11 @@ object HTTPClient {
         return playerInfo
     }
 
-    suspend fun storePlayer(player: ServerPlayer) {
+    suspend fun storePlayer(player: ServerPlayer) : HttpResponse{
         val data = PlayerData(player.uuid)
         val dataJson = gson.toJson(data)
 
-        client.put(URL + "player/store") {
+        return client.put(URL + "player/store") {
             contentType(ContentType.Application.Json)
             setBody(dataJson)
         }
