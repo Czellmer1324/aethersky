@@ -18,7 +18,6 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class MasterPlayerService {
-    //TODO: NEED TO FIGURE OUT IF CACHE EXPIRATION IS ACTUALLY WORKING
     private final MasterPlayerRepository playerRepository;
     private final MasterPlayerMapper mapper;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -52,14 +51,12 @@ public class MasterPlayerService {
                 player = mapper.toMasterPlayer(cachedInfo.get());
                 //update the TTL of the cached player
                 setNewTTL(uuid);
-                log.info("Retrieved player from cache. New expiration : {}", redisTemplate.opsForHash().getTimeToLive(PLAYER_HASH_KEY, Collections.singleton("player:" + uuid)));
             }
 
             PlayerData data = new PlayerData(player.getUuid());
             return new ServiceResponse(data, true, "no fail");
         } catch (Exception e) {
             log.warn(e.getMessage());
-            log.warn(Arrays.toString(e.getStackTrace()));
             return new ServiceResponse(Map.of("Message", "Failure retrieving player"), false, "Failure retrieving player info");
         }
     }
@@ -95,7 +92,7 @@ public class MasterPlayerService {
 
             // Mark for database sync
             redisTemplate.opsForSet().add(WRITE_BUFFER_KEY, data.uuid());
-            log.info("Saved player with uuid: {}", data.uuid());
+            log.info("Cached player with uuid: {}", data.uuid());
 
             return new ServiceResponse(Map.of("Message", "Player stored"), true, "No fail");
         } catch (Exception e) {

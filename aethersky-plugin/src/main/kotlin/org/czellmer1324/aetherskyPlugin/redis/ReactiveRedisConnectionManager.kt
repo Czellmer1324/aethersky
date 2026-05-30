@@ -1,4 +1,4 @@
-package org.czellmer1324.proxyPlugin.redis
+package org.czellmer1324.aetherskyPlugin.redis
 
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.StatefulRedisConnection
@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 
-object RedisConnectionManager : AutoCloseable {
+object ReactiveRedisConnectionManager : AutoCloseable {
     private val redisClient: RedisClient = RedisClient.create("redis://aetherRedis:6379")
     private val connection: StatefulRedisConnection<String, String> = redisClient.connect()
     private val pubSubConnection: StatefulRedisPubSubConnection<String, String> = redisClient.connectPubSub()
-    private val commands: RedisCommands<String, String>? = connection.sync()
+    private val commands: RedisCommands<String?, String?>? = connection.sync()
 
     private val messageFlow = pubSubConnection.reactive()
         .observeChannels()
@@ -35,10 +35,6 @@ object RedisConnectionManager : AutoCloseable {
 
         return messageFlow.filter { it.channel == channel }
             .map { it.message }
-    }
-
-    fun redisSyncCommands() : RedisCommands<String, String>? {
-        return commands
     }
 
     override fun close() {

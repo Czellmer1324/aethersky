@@ -23,7 +23,7 @@ dependencies {
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.22.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.22.0")
     implementation("io.lettuce:lettuce-core:7.5.1.RELEASE")
-    implementation("dev.rollczi:litecommands-bukkit:3.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
 }
 
 kotlin {

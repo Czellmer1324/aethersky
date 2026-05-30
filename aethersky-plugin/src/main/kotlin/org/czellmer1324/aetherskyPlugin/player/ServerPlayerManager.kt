@@ -18,8 +18,12 @@ object ServerPlayerManager {
     }
 
     fun printPlayers() {
-        cache.forEach { (uUID, player) ->
-            println("$uUID    $player")
+        if (cache.isEmpty()) {
+            println("no current players")
+        } else {
+            cache.forEach { (uUID, player) ->
+                println("$uUID    $player")
+            }
         }
     }
 }
