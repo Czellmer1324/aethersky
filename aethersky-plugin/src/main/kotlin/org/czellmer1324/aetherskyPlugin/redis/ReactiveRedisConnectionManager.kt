@@ -16,6 +16,10 @@ object ReactiveRedisConnectionManager : AutoCloseable {
     private val pubSubConnection: StatefulRedisPubSubConnection<String, String> = redisClient.connectPubSub()
     private val commands: RedisCommands<String?, String?>? = connection.sync()
 
+    fun init() {
+        reactiveSubscribe("successfulMove")
+    }
+
     private val messageFlow = pubSubConnection.reactive()
         .observeChannels()
         .asFlow()

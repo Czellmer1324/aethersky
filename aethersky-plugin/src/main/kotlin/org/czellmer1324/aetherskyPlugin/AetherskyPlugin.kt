@@ -4,6 +4,7 @@ import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
 import org.czellmer1324.aetherskyPlugin.net.HTTPClient
+import org.czellmer1324.aetherskyPlugin.player.commands.TransferToHub
 import org.czellmer1324.aetherskyPlugin.player.commands.island.IslandCommand
 import org.czellmer1324.aetherskyPlugin.player.listeners.PlayerJoinAndLeave
 import org.czellmer1324.aetherskyPlugin.player.listeners.ServerMoveActionDeny
@@ -21,6 +22,7 @@ class AetherskyPlugin : JavaPlugin() {
         server.pluginManager.registerEvents(ServerMoveActionDeny(), this)
         this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {command ->
             IslandCommand.register(command.registrar(), this)
+            TransferToHub.register(command.registrar(), this)
         }
     }
 

@@ -13,6 +13,9 @@ object PlayerMovePubSub {
         this.plugin = plugin
         messageListener = MessageListener(this.plugin)
         redisPublisher = RedisPublisher(this.plugin)
+
+        // init reactive subscriber
+        ReactiveRedisConnectionManager.init()
         this.plugin.logger.info("Player Pub/Sub messenger initialized")
     }
 
