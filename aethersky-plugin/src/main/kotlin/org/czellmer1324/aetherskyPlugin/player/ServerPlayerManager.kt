@@ -9,6 +9,10 @@ object ServerPlayerManager {
         cache[player.uuid as UUID] = player
     }
 
+    fun contains(uuid: UUID) : Boolean {
+        return cache.containsKey(uuid)
+    }
+
     fun getPlayer(uuid: UUID) : ServerPlayer? {
         return cache[uuid]
     }

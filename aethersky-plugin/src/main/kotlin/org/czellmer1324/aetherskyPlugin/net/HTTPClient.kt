@@ -49,7 +49,7 @@ object HTTPClient {
         return playerInfo
     }
 
-    suspend fun storePlayer(player: ServerPlayer) : HttpResponse{
+    suspend fun storePlayer(player: ServerPlayer) : HttpResponse {
         val data = PlayerData(player.uuid)
         val dataJson = gson.toJson(data)
 
