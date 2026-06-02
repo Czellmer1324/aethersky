@@ -4,6 +4,7 @@ import java.util.UUID
 
 object ServerPlayerManager {
     private val cache = HashMap<UUID, ServerPlayer>()
+    private val pendingServerTransfer = HashSet<UUID>()
 
     fun cachePlayer(player: ServerPlayer) {
         cache[player.uuid as UUID] = player
@@ -29,5 +30,17 @@ object ServerPlayerManager {
                 println("$uUID    $player")
             }
         }
+    }
+
+    fun pendMovePlayer(uuid: UUID) {
+        pendingServerTransfer.add(uuid)
+    }
+
+    fun checkPendingMove(uuid: UUID) : Boolean {
+        return pendingServerTransfer.contains(uuid)
+    }
+
+    fun unPendMovePlayer(uuid: UUID) {
+        pendingServerTransfer.remove(uuid)
     }
 }

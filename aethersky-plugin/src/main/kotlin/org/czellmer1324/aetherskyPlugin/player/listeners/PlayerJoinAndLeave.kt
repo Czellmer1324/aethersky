@@ -34,9 +34,9 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
                 plugin.logger.info(response.toString())
                 PreJoinCache.cachePreInfo(response)
             } catch (e : Exception) {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.text("Error retrieving data, please try again"))
                 plugin.logger.warning("Error retrieving data for UUID:${event.uniqueId} while joining server")
                 plugin.logger.warning(e.message)
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.text("Error retrieving data, please try again"))
             }
         }
     }
@@ -60,11 +60,10 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
     fun playerLeaveEvent(ev: PlayerQuitEvent) {
         val id = ev.player.uniqueId
 
-        // Check to see if the server player manager contains the players info
-        // If it doesn't that means they were transferred servers by one of the commands
-        // If it does that means they are logging off, or something else happened and data still needs to be saved
+        // Check to see if the player is pending server transfer
+        // If they are, data does not need to be saved here
 
-        if (!ServerPlayerManager.contains(id)) return
+        if (ServerPlayerManager.checkPendingMove(id)) return
 
         plugin.launch(Dispatchers.IO) {
             try {

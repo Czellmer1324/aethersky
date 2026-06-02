@@ -17,10 +17,10 @@ import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import org.czellmer1324.aetherskyPlugin.exceptions.PlayerTransferException
 import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
-import org.czellmer1324.aetherskyPlugin.player.commands.TransferToHub
 import org.czellmer1324.aetherskyPlugin.player.listeners.ServerMoveActionDeny
 import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
 import org.czellmer1324.aetherskyPlugin.redis.ReactiveRedisConnectionManager
+import java.util.UUID
 import kotlin.text.startsWith
 import kotlin.time.Duration.Companion.seconds
 
@@ -37,6 +37,7 @@ fun transferServer(plugin: AetherskyPlugin, ctx: CommandContext<CommandSourceSta
     // Grab the players UUID
     val id = sender.uniqueId
     sender.sendMessage { Component.text("Transferring servers").color(TextColor.color(0, 255, 0)) }
+    ServerPlayerManager.pendMovePlayer(id)
 
     // Prevent the player from completing actions during the move process
     ServerMoveActionDeny.add(id)
@@ -76,11 +77,13 @@ fun transferServer(plugin: AetherskyPlugin, ctx: CommandContext<CommandSourceSta
                         TextColor.color(255, 0, 0)
                     )
                 }
-                TransferToHub.plugin.logger.warning("Error transferring player: ${e.message}")
+                plugin.logger.warning("Error transferring player: ${e.message}")
+                e.printStackTrace()
             }
         }
 
         // remove the player from the action denier
-        ServerMoveActionDeny.remove(sender.uniqueId)
+        ServerMoveActionDeny.remove(id)
+        ServerPlayerManager.unPendMovePlayer(id)
     }
 }
