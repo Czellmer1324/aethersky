@@ -20,7 +20,6 @@ import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.listeners.ServerMoveActionDeny
 import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
 import org.czellmer1324.aetherskyPlugin.redis.ReactiveRedisConnectionManager
-import java.util.UUID
 import kotlin.text.startsWith
 import kotlin.time.Duration.Companion.seconds
 

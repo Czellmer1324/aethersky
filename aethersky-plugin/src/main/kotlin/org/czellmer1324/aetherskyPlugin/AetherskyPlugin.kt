@@ -2,7 +2,6 @@ package org.czellmer1324.aetherskyPlugin
 
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import com.google.gson.Gson
-import io.ktor.http.ContentType.Application.Json
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
 import org.czellmer1324.aetherskyPlugin.net.HTTPClient

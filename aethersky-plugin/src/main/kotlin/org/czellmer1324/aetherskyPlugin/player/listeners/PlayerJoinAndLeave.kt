@@ -6,7 +6,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.event.EventHandler
@@ -19,7 +18,6 @@ import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
-import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 

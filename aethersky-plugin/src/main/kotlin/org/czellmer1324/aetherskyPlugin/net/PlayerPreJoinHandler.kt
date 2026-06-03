@@ -2,8 +2,6 @@ package org.czellmer1324.aetherskyPlugin.net
 
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.Dispatchers
-import net.kyori.adventure.text.Component
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
 import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
