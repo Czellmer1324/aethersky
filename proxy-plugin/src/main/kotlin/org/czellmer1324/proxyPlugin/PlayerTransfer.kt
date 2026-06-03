@@ -24,14 +24,12 @@ object PlayerTransfer {
             RedisConnectionManager.listenToChannel(MOVE_CHANNEL).collect { message ->
                 try {
                     container.launch(Dispatchers.Default) {
-                        servers.forEach { (string, server) ->
-                            println("name: $string, ${server.serverInfo}")
-                        }
                         // Split the message
                         // In formate of - player:UUID:server:ServerName
                         val split = message.split(':')
 
                         // Grab server from the server list using the name from the message
+                        println(split[3])
                         val server = servers[split[3]]
 
                         // Check to make sure the server is not null

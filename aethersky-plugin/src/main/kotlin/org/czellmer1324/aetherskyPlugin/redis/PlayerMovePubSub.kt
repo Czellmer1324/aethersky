@@ -7,7 +7,8 @@ object PlayerMovePubSub {
     private lateinit var plugin: AetherskyPlugin
     lateinit var messageListener: MessageListener
     lateinit var redisPublisher : RedisPublisher
-    const val CHANNEL = "playerMove"
+    const val MOVE_CHANNEL = "playerMove"
+    const val READY_TO_CONNECT_CHANNEL = "preConnect"
 
     fun init(plugin: AetherskyPlugin) {
         this.plugin = plugin
@@ -20,6 +21,10 @@ object PlayerMovePubSub {
     }
 
     fun sendReadyToMove(message: String) {
-        redisPublisher.publishMessage(CHANNEL, RedisMessage(message))
+        redisPublisher.publishMessage(MOVE_CHANNEL, RedisMessage(message))
+    }
+
+    fun sendReadyToConnect(message: String) {
+        redisPublisher.publishMessage(READY_TO_CONNECT_CHANNEL, RedisMessage(message))
     }
 }

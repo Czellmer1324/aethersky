@@ -19,6 +19,7 @@ import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
+import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 
@@ -27,18 +28,7 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
 
     @EventHandler
     suspend fun preLoginEvent(event: AsyncPlayerPreLoginEvent) {
-        withContext(Dispatchers.IO) {
-            // Get the player info from master control
-            try {
-                val response = HTTPClient.retrievePlayerInfo(event.uniqueId)
-                plugin.logger.info(response.toString())
-                PreJoinCache.cachePreInfo(response)
-            } catch (e : Exception) {
-                plugin.logger.warning("Error retrieving data for UUID:${event.uniqueId} while joining server")
-                plugin.logger.warning(e.message)
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.text("Error retrieving data, please try again"))
-            }
-        }
+        // does nothing at the moment
     }
 
     @EventHandler
