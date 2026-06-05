@@ -1,9 +1,9 @@
-package org.czellmer1324.aetherskyPlugin.net
+package org.czellmer1324.aetherskyPlugin.player.pre.join
 
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.Dispatchers
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
-import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
+import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
 import org.czellmer1324.aetherskyPlugin.redis.ReactiveRedisConnectionManager
 import java.util.UUID
@@ -27,7 +27,6 @@ object PlayerPreJoinHandler {
                         val id = UUID.fromString(split[3])
                         try {
                             val response = HTTPClient.retrievePlayerInfo(id)
-                            plugin.logger.info(response.toString())
                             PreJoinCache.cachePreInfo(response)
                             PlayerMovePubSub.sendReadyToConnect("server:$serverName:player:$id:$JOIN_SUFFIX")
                         } catch (e : Exception) {

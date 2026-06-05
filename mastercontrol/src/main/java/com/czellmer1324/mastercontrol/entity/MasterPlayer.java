@@ -18,6 +18,9 @@ public class MasterPlayer implements Persistable<UUID> {
     @Id
     private UUID uuid;
 
+    @Column(name = "inventory", nullable = false, columnDefinition = "TEXT")
+    private String inventory = "";
+
     public MasterPlayer(UUID uuid) {
         this.uuid = uuid;
     }

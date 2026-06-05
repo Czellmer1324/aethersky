@@ -6,6 +6,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.event.EventHandler
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import org.czellmer1324.aetherskyPlugin.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
@@ -20,6 +22,7 @@ import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
+import org.czellmer1324.aetherskyPlugin.player.util.deserializePlayerInvent
 
 class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
 
@@ -30,7 +33,7 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
     }
 
     @EventHandler
-    fun playerJoinEvent(event: PlayerJoinEvent) {
+    suspend fun playerJoinEvent(event: PlayerJoinEvent) {
         // Removes and returns the player info from the pre-join cache
         val info = PreJoinCache.retrieveCachedInfo(event.player.uniqueId)
 
@@ -39,6 +42,16 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
                 .color(TextColor.color(255, 0, 0)))
             return
         }
+
+        // Deserialize the players inventory
+        val inventory : Array<ItemStack?>
+        withContext(Dispatchers.Default) {
+            inventory = deserializePlayerInvent(info.inventory)
+        }
+
+        // Set the players inventory
+        event.player.inventory.clear()
+        event.player.inventory.contents = inventory
 
         val sPlayer = ServerPlayer(info.uuid, event.player)
         ServerPlayerManager.cachePlayer(sPlayer)

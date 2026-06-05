@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
 import org.czellmer1324.aetherskyPlugin.net.HTTPClient
-import org.czellmer1324.aetherskyPlugin.net.PlayerPreJoinHandler
+import org.czellmer1324.aetherskyPlugin.player.pre.join.PlayerPreJoinHandler
 import org.czellmer1324.aetherskyPlugin.player.commands.TransferToHub
 import org.czellmer1324.aetherskyPlugin.player.commands.island.IslandCommand
 import org.czellmer1324.aetherskyPlugin.player.listeners.PlayerJoinAndLeave

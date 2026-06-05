@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinPlayerInfo
+import org.czellmer1324.aetherskyPlugin.player.util.serializePlayerInvent
 import java.util.*
 
 object HTTPClient {
@@ -50,7 +51,14 @@ object HTTPClient {
     }
 
     suspend fun storePlayer(player: ServerPlayer) : HttpResponse {
-        val data = PlayerData(player.uuid)
+        // Serialize the inventory before sending it
+        val inventory : String
+        withContext(Dispatchers.Default) {
+            inventory = serializePlayerInvent(player.wrapped!!.inventory)
+        }
+
+        // Convert the DTO to JSON
+        val data = PlayerData(player.uuid, inventory)
         val dataJson = gson.toJson(data)
 
         return client.put(URL + "player/store") {

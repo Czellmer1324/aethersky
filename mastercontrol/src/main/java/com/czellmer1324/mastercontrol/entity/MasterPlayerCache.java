@@ -12,10 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MasterPlayerCache {
     private UUID uuid;
+    private String inventory;
 
     private boolean isNew;
 
     public void updateInfo(PlayerData data) {
         this.uuid = data.uuid();
+        this.inventory = data.inventory();
     }
 }

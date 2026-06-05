@@ -1,34 +1,54 @@
 package org.czellmer1324.aetherskyPlugin.player.util
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import kotlin.io.encoding.Base64
 
 fun serializePlayerInvent(inventory: Inventory) : String {
-    val itemMap = HashMap<Int, String>()
+    val itemMap = HashMap<Int, ByteArray>()
 
+    // Encode each item stack to a byte array and store its position and byte[] in a hashmap
     for (i in 0..<inventory.size) {
         val item = inventory.getItem(i)
-        println(item == null)
-        println(item?.type ?: "null")
         if (item != null && !item.type.isAir) {
-            itemMap[i] = Base64Coder.encodeLines(item.serializeAsBytes())
+            itemMap[i] = item.serializeAsBytes()
         }
     }
 
-    return Gson().toJson(itemMap)
+    // Convert the hashmap into a byte stream
+    val byteStream = ByteArrayOutputStream()
+    ObjectOutputStream(byteStream).use { oos ->
+        oos.writeObject(itemMap)
+    }
+
+    // Encode and return the byte array as a string
+    return Base64.encode(byteStream.toByteArray())
 }
 
 fun deserializePlayerInvent(invent : String) : Array<ItemStack?> {
-    val mapType = object : TypeToken<HashMap<Int, String>>() {}.type
-    val inventMap : HashMap<Int, String> = Gson().fromJson(invent, mapType)
+    // If the player had nothing in their inventory
+    if (invent.isEmpty()) {
+        return arrayOfNulls(size = 41)
+    }
+
+    // Convert the string to a byte array
+    val inventByteArray = Base64.decode(invent)
+
+    // Suppressing cast as I know what the types are
+    @Suppress("UNCHECKED_CAST")
+    val inventMap : HashMap<Int, ByteArray> = ObjectInputStream(ByteArrayInputStream(inventByteArray)).use { ois ->
+        ois.readObject() as HashMap<Int, ByteArray>
+    }
 
     val inventory : Array<ItemStack?> = arrayOfNulls(size = 41)
 
-   inventMap.forEach { (slot, itemString) ->
-       val item = ItemStack.deserializeBytes(Base64Coder.decodeLines(itemString))
+    // Fill the array with the items stacks
+   inventMap.forEach { (slot, itemBytes) ->
+       val item = ItemStack.deserializeBytes(itemBytes)
        inventory[slot] = item
    }
 

@@ -53,7 +53,7 @@ public class MasterPlayerService {
                 setNewTTL(uuid);
             }
 
-            PlayerData data = new PlayerData(player.getUuid());
+            PlayerData data = new PlayerData(player.getUuid(), player.getInventory());
             return new ServiceResponse(data, true, "no fail");
         } catch (Exception e) {
             log.warn(e.getMessage());
