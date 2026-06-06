@@ -15,11 +15,11 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.Player
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
 import org.czellmer1324.aetherskyPlugin.exceptions.PlayerTransferException
-import org.czellmer1324.aetherskyPlugin.net.HTTPClient
+import org.czellmer1324.aetherskyPlugin.server.util.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.listeners.ServerMoveActionDeny
-import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
-import org.czellmer1324.aetherskyPlugin.redis.ReactiveRedisConnectionManager
+import org.czellmer1324.aetherskyPlugin.server.util.redis.PlayerMovePubSub
+import org.czellmer1324.aetherskyPlugin.server.util.redis.ReactiveRedisConnectionManager
 import kotlin.text.startsWith
 import kotlin.time.Duration.Companion.seconds
 

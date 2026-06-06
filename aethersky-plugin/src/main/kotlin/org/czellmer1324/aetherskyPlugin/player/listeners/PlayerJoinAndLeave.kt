@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
-import org.czellmer1324.aetherskyPlugin.net.HTTPClient
+import org.czellmer1324.aetherskyPlugin.server.util.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayer
 import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import org.czellmer1324.aetherskyPlugin.player.pre.join.PreJoinCache

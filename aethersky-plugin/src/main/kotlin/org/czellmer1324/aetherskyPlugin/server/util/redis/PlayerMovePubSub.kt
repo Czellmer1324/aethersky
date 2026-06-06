@@ -1,4 +1,4 @@
-package org.czellmer1324.aetherskyPlugin.redis
+package org.czellmer1324.aetherskyPlugin.server.util.redis
 
 import com.czellmer1324.dto.RedisMessage
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin

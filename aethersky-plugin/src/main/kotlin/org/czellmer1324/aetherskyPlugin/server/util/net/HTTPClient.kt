@@ -1,4 +1,4 @@
-package org.czellmer1324.aetherskyPlugin.net
+package org.czellmer1324.aetherskyPlugin.server.util.net
 
 import com.czellmer1324.dto.PlayerData
 import com.google.gson.Gson

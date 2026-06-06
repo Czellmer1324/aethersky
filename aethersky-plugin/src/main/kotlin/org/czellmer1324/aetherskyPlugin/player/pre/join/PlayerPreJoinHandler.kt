@@ -3,9 +3,9 @@ package org.czellmer1324.aetherskyPlugin.player.pre.join
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.Dispatchers
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
-import org.czellmer1324.aetherskyPlugin.net.HTTPClient
-import org.czellmer1324.aetherskyPlugin.redis.PlayerMovePubSub
-import org.czellmer1324.aetherskyPlugin.redis.ReactiveRedisConnectionManager
+import org.czellmer1324.aetherskyPlugin.server.util.net.HTTPClient
+import org.czellmer1324.aetherskyPlugin.server.util.redis.PlayerMovePubSub
+import org.czellmer1324.aetherskyPlugin.server.util.redis.ReactiveRedisConnectionManager
 import java.util.UUID
 
 object PlayerPreJoinHandler {

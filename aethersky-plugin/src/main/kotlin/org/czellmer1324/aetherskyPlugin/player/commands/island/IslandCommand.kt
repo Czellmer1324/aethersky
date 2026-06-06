@@ -31,7 +31,7 @@ object IslandCommand {
     }
 
     private fun teleportToIsland(ctx: CommandContext<CommandSourceStack>): Int {
-        transferServer(TransferToHub.plugin, ctx, TARGET_MOVE_SERVER)
+        transferServer(plugin, ctx, TARGET_MOVE_SERVER)
 
         return Command.SINGLE_SUCCESS
     }

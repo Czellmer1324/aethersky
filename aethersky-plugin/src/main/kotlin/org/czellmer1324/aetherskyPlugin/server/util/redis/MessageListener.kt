@@ -1,4 +1,4 @@
-package org.czellmer1324.aetherskyPlugin.redis
+package org.czellmer1324.aetherskyPlugin.server.util.redis
 
 import io.lettuce.core.pubsub.RedisPubSubAdapter
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
