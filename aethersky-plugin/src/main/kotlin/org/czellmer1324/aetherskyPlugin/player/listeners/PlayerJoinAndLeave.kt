@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -32,7 +33,7 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
         // does nothing at the moment
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     suspend fun playerJoinEvent(event: PlayerJoinEvent) {
         // Removes and returns the player info from the pre-join cache
         val info = PreJoinCache.retrieveCachedInfo(event.player.uniqueId)

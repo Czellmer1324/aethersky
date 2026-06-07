@@ -19,5 +19,7 @@ object ServerUtilModule {
         // EVENTS
         plugin.server.pluginManager.registerSuspendingEvents(PlayerJoinAndLeave(plugin), plugin)
         plugin.server.pluginManager.registerEvents(ServerMoveActionDeny(), plugin)
+
+        // COMMANDS
     }
 }
