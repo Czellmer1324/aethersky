@@ -3,6 +3,8 @@ package org.czellmer1324.aetherskyPlugin.player.pre.join
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.Dispatchers
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
+import org.czellmer1324.aetherskyPlugin.island.loader.IslandWorldLoader
+import org.czellmer1324.aetherskyPlugin.server.util.ServerType
 import org.czellmer1324.aetherskyPlugin.server.util.net.HTTPClient
 import org.czellmer1324.aetherskyPlugin.server.util.redis.PlayerMovePubSub
 import org.czellmer1324.aetherskyPlugin.server.util.redis.ReactiveRedisConnectionManager
@@ -12,9 +14,11 @@ object PlayerPreJoinHandler {
     private const val CHANNEL = "preConnect"
     private const val JOIN_SUFFIX = "status:ready"
     private lateinit var serverName : String
+    private lateinit var serverType: ServerType
 
     fun init(plugin: AetherskyPlugin) {
         serverName = plugin.serverInfo.serverName
+        serverType = plugin.serverInfo.serverType
 
         plugin.launch(Dispatchers.IO) {
             // Listen to messages from proxy
@@ -28,6 +32,13 @@ object PlayerPreJoinHandler {
                         try {
                             val response = HTTPClient.retrievePlayerInfo(id)
                             PreJoinCache.cachePreInfo(response)
+
+                            // TODO: Will need to do a lot more logic with when it comes to checking if the world is already loaded or not
+                            // Will most likely need to create a world manager to check this info
+                            if (serverType == ServerType.ISLAND) {
+                                IslandWorldLoader.loadWorld(id)
+                            }
+
                             PlayerMovePubSub.sendReadyToConnect("server:$serverName:player:$id:$JOIN_SUFFIX")
                         } catch (e : Exception) {
                             plugin.logger.warning("Error retrieving data for UUID:${id} while joining server")
