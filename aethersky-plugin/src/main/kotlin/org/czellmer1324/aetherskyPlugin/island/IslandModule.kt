@@ -15,6 +15,7 @@ object IslandModule {
         if (plugin.serverInfo.serverType != ServerType.ISLAND) return
 
         // Enable Features
+        IslandWorldManager.init(plugin)
         IslandWorldLoader.init(plugin)
 
         // Commands that can be used on island

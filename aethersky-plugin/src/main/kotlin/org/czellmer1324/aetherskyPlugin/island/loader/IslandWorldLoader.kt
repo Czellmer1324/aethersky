@@ -7,6 +7,7 @@ import com.infernalsuite.asp.api.world.properties.SlimePropertyMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
+import org.czellmer1324.aetherskyPlugin.island.IslandWorldManager
 import java.util.UUID
 
 object IslandWorldLoader {
@@ -29,10 +30,16 @@ object IslandWorldLoader {
     // TODO: Will need to add some type of world manager
     suspend fun loadWorld(playerId : UUID) {
         withContext(Dispatchers.IO) {
-            val island = asp.readWorld(loader, "1a72639b-ef10-4234-86f5-4e50a82a200a", false, propertyMap)
 
-            withContext(plugin.minecraftDispatcher) {
-                val worldInstance = asp.loadWorld(island, true)
+            if (!IslandWorldManager.alreadyLoaded(playerId.toString())) {
+                val island = asp.readWorld(loader, playerId.toString(), false, propertyMap)
+
+                // Loading the world needs to be done synchronously
+                withContext(plugin.minecraftDispatcher) {
+                    val worldInstance = asp.loadWorld(island, true)
+                    IslandWorldManager.addWorld(playerId.toString(), worldInstance)
+                    plugin.logger.info("Instance that I tried to load: ${worldInstance.name}:${worldInstance.bukkitWorld}")
+                }
             }
         }
     }
