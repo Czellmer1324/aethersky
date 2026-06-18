@@ -1,5 +1,6 @@
 package com.czellmer1324.mastercontrol.controller;
 
+import com.czellmer1324.dto.IslandWorldData;
 import com.czellmer1324.mastercontrol.master.dto.ServiceResponse;
 import com.czellmer1324.mastercontrol.service.IslandService;
 import lombok.AllArgsConstructor;
@@ -54,8 +55,13 @@ public class IslandController {
     Used for saving a new world byte blob to the database for a given ID
      */
     @PostMapping("/{uuid}")
-    public ResponseEntity<?> saveIsland(@PathVariable UUID uuid, @RequestBody byte[] world) {
+    public ResponseEntity<?> saveIsland(@PathVariable UUID uuid, @RequestBody IslandWorldData worldData) {
+        ServiceResponse response = islandService.saveIsland(uuid, worldData.worldData());
 
-        return ResponseEntity.status(200).body("");
+        if (response.successful()) {
+            return ResponseEntity.status(HttpStatus.OK).body(response.response());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.reasonForFail());
+        }
     }
 }

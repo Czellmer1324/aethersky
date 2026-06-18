@@ -3,10 +3,13 @@ package com.czellmer1324.mastercontrol.service;
 import com.czellmer1324.mastercontrol.entity.IslandWorld;
 import com.czellmer1324.mastercontrol.master.dto.ServiceResponse;
 import com.czellmer1324.mastercontrol.repository.IslandWorldRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,10 +42,25 @@ public class IslandService {
             world = opWorld.get();
         }
 
-        return new ServiceResponse(world.getWorldData(), true, "No Fail");
+        return new ServiceResponse(world.getWorldData(), true, null);
     }
 
     private boolean islandExists(String islandId) {
         return worldRepository.existsById(islandId);
+    }
+
+    @Transactional
+    public ServiceResponse saveIsland(UUID ownerId, byte[] worldData) {
+        try {
+
+            IslandWorld world = worldRepository.findByOwnerId(ownerId).orElseThrow(() -> new EntityNotFoundException("World not found"));
+
+            world.setWorldData(worldData);
+        } catch (Exception e) {
+            log.warn("Error saving island for user {}: {}", ownerId, e.getMessage());
+            return new ServiceResponse(Map.of("Message", "Failed to save island"), false, "Failed to save");
+        }
+
+        return new ServiceResponse(Map.of("Message", "Success"), true, null);
     }
 }

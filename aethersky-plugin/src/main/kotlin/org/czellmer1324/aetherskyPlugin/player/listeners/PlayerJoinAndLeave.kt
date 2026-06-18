@@ -63,7 +63,6 @@ class PlayerJoinAndLeave(private val plugin: AetherskyPlugin) : Listener {
 
         // Check to see if the player is pending server transfer
         // If they are, data does not need to be saved here
-
         if (ServerPlayerManager.checkPendingMove(id)) return
 
         plugin.launch(Dispatchers.IO) {

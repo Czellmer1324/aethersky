@@ -1,6 +1,7 @@
 package org.czellmer1324.aetherskyPlugin.island
 
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
+import com.infernalsuite.asp.api.AdvancedSlimePaperAPI
 import com.infernalsuite.asp.api.world.SlimeWorldInstance
 import kotlinx.coroutines.withContext
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
@@ -10,6 +11,7 @@ import org.czellmer1324.aetherskyPlugin.player.ServerPlayerManager
 import java.util.UUID
 
 object IslandWorldManager {
+    // TODO: Store extra data here as well?
     private val loadedIslands = HashMap<String, SlimeWorldInstance>()
     private lateinit var plugin: AetherskyPlugin
 
@@ -27,6 +29,10 @@ object IslandWorldManager {
 
     fun alreadyLoaded(worldName: String) : Boolean {
         return loadedIslands.containsKey(worldName)
+    }
+
+    fun saveWorld(worldName: String) {
+        AdvancedSlimePaperAPI.instance().saveWorld(loadedIslands[worldName])
     }
 
     fun getWorld(worldName: String) : SlimeWorldInstance? {

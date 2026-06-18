@@ -1,5 +1,6 @@
 package org.czellmer1324.aetherskyPlugin.island.loader
 
+import com.czellmer1324.dto.IslandWorldData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.infernalsuite.asp.api.loaders.SlimeLoader
@@ -78,8 +79,22 @@ class CustomApiLoader (private var apiUrl: String,
     }
 
     override fun saveWorld(worldName: String, serializedWorld: ByteArray) {
-        // TODO: Need to implement custom logic for this with my mastercontrol api
-        logger.warn("Illegal call to saveWorld: API Worlds cannot be saved. They're always read-only.")
+        // TODO: Need to do something on fail world save
+        val client: HttpClient = createHttpClient()
+
+        val json = gson.toJson(IslandWorldData(serializedWorld))
+
+        val postRequest = HttpRequest.newBuilder()
+            .uri(URI.create(apiUrl + worldName))
+            .header("Authorization", authorizationHeader)
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .build()
+
+        val getResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString())
+        val responseBody = gson.fromJson(getResponse.body(), HashMap::class.java)
+        logger.info("Response info:")
+        logger.info(responseBody.toString())
     }
 
     override fun deleteWorld(worldName: String) {
@@ -88,7 +103,7 @@ class CustomApiLoader (private var apiUrl: String,
     }
 
     @Throws(IOException::class, InterruptedException::class)
-    private fun downloadFile(worldId: String?): ByteArray {
+    private fun downloadFile(worldId: String): ByteArray {
         val client: HttpClient = createHttpClient()
 
         // Check file size with HEAD request
