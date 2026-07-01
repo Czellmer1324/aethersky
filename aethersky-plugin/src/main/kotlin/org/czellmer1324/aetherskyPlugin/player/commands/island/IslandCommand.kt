@@ -6,7 +6,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import org.czellmer1324.aetherskyPlugin.AetherskyPlugin
-import org.czellmer1324.aetherskyPlugin.player.commands.TransferToHub
 import org.czellmer1324.aetherskyPlugin.player.util.transferServer
 
 // TODO: WILL NEED TO MAKE SURE THIS WORKS WHEN THERE ARE MULTIPLE ISLAND SERVERS

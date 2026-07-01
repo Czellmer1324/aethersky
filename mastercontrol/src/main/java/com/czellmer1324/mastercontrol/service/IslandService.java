@@ -17,18 +17,16 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class IslandService {
-    private static final String DEFAULT_ISLAND_ID = "DEFAULT_ISLAND_WORLD";
+    private static final UUID DEFAULT_ISLAND_ID = UUID.fromString("5f71dda6-2f3a-41ea-a6c6-65365aaddbc0");
     // TODO: Add caching after basic read from database logic is there
-    // TODO: Can do the default island using the asp plugin command within the game to save the file
     private final IslandWorldRepository worldRepository;
 
     public ServiceResponse getIsland(UUID ownerId) {
-        Optional<IslandWorld> opWorld = worldRepository.findByOwnerId(ownerId);
+        Optional<IslandWorld> opWorld = worldRepository.findById(ownerId);
         IslandWorld world;
 
         if (opWorld.isEmpty()) {
             // Fall back to default world blob
-            log.info("We made it here");
             Optional<IslandWorld> opDefault = worldRepository.findById(DEFAULT_ISLAND_ID);
             if (opDefault.isEmpty()) {
                 return new ServiceResponse(null, false, "Something went wrong with grabbing default world");
@@ -45,15 +43,15 @@ public class IslandService {
         return new ServiceResponse(world.getWorldData(), true, null);
     }
 
-    private boolean islandExists(String islandId) {
-        return worldRepository.existsById(islandId);
+    private boolean islandExists(UUID ownerId) {
+        return worldRepository.existsById(ownerId);
     }
 
     @Transactional
     public ServiceResponse saveIsland(UUID ownerId, byte[] worldData) {
         try {
 
-            IslandWorld world = worldRepository.findByOwnerId(ownerId).orElseThrow(() -> new EntityNotFoundException("World not found"));
+            IslandWorld world = worldRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("World not found"));
 
             world.setWorldData(worldData);
         } catch (Exception e) {

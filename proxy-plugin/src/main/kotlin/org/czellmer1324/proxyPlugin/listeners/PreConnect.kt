@@ -41,6 +41,7 @@ class PreConnect(val logger: Logger, private val servers: HashMap<String, Regist
             val status = message.split(':').last()
 
             if (status == "failed") {
+                // TODO: This may cause memory leak issues during server transfers. Need to somehow make sure player data on sub servers is cleaned up as well as if an island is loaded with no one on it
                 event.player.disconnect(Component.text("There was an error retrieving your data, try joining again!").color(TextColor.color(255, 0, 0)))
             }
         }

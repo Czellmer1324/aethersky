@@ -52,6 +52,7 @@ object PlayerTransfer {
                         val actPlayer = player.get()
 
                         // Create the connection request for the player
+                        // This triggers the onServerPreConnect Method in PreConnect listener
                         val response = actPlayer.createConnectionRequest(server).connect()
 
                         // Ensure the move was successful before sending the message that the move was completed

@@ -5,30 +5,41 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Persistable;
 
 import java.util.UUID;
 
 // The class for storing the raw Island world byte[]
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class IslandWorld {
+@NoArgsConstructor
+public class IslandWorld implements Persistable<UUID> {
     // Have it as string so default world can be named something
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @Column(name = "owner_id", nullable = false)
-    private UUID ownerId;
+    private UUID id;
 
     @Column(name = "world_data", nullable = false, columnDefinition = "BYTEA")
     private byte[] worldData;
 
-    public IslandWorld(UUID ownerId, byte[] worldData) {
-        this.ownerId = ownerId;
+    public IslandWorld(UUID id, byte[] worldData) {
+        this.id = id;
         this.worldData = worldData;
+    }
+
+    @Transient
+    private boolean isNew = true; // Flag to track if it's new
+
+    @Override
+    public UUID getId() { return id; }
+
+    @Override
+    public boolean isNew() { return isNew; }
+
+    @PostLoad
+    @PrePersist
+    void markNotNew() {
+        this.isNew = false;
     }
 }
