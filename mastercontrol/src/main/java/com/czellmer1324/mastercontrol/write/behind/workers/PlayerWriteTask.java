@@ -52,7 +52,6 @@ public class PlayerWriteTask {
         try {
             //save the players
             playerRepository.saveAll(playersToSync);
-            playersToSync.forEach(player -> log.info("saved player: {}", player.getId()));
             redisTemplate.delete("players:pending_sync");
         } catch (Exception e) {
             log.warn("Failed to batch update players : {}", e.getMessage());

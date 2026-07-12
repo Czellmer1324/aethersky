@@ -92,7 +92,6 @@ public class MasterPlayerService {
 
             // Mark for database sync
             redisTemplate.opsForSet().add(WRITE_BUFFER_KEY, data.uuid());
-            log.info("Cached player with uuid: {}", data.uuid());
 
             return new ServiceResponse(Map.of("Message", "Player stored"), true, "No fail");
         } catch (Exception e) {
