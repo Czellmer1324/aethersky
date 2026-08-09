@@ -3,7 +3,7 @@ package com.czellmer1324.mastercontrol.write.behind.workers;
 import com.czellmer1324.mastercontrol.entity.IslandWorld;
 import com.czellmer1324.mastercontrol.entity.IslandWorldCache;
 import com.czellmer1324.mastercontrol.repository.IslandWorldRepository;
-import com.czellmer1324.mastercontrol.util.IslandWorldMapper;
+import com.czellmer1324.mastercontrol.util.island.IslandWorldMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -1,4 +1,4 @@
-package com.czellmer1324.mastercontrol.util;
+package com.czellmer1324.mastercontrol.util.island;
 
 import com.czellmer1324.mastercontrol.entity.IslandWorld;
 import com.czellmer1324.mastercontrol.entity.IslandWorldCache;
